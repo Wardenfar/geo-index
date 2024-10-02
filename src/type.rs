@@ -69,6 +69,11 @@ impl IndexableNum for f64 {
     const BYTES_PER_ELEMENT: usize = 8;
 }
 
+impl IndexableNum for u64 {
+    const TYPE_INDEX: u8 = 9;
+    const BYTES_PER_ELEMENT: usize = 8;
+}
+
 /// An enum over the allowed coordinate types in the spatial index.
 pub enum CoordType {
     Int8,
@@ -79,6 +84,7 @@ pub enum CoordType {
     UInt32,
     Float32,
     Float64,
+    UInt64,
 }
 
 impl CoordType {
@@ -106,6 +112,7 @@ impl CoordType {
             u32::TYPE_INDEX => CoordType::UInt32,
             f32::TYPE_INDEX => CoordType::Float32,
             f64::TYPE_INDEX => CoordType::Float64,
+            u64::TYPE_INDEX => CoordType::UInt64,
             t => return Err(GeoIndexError::General(format!("Unexpected type {}.", t))),
         };
         Ok(result)
@@ -124,4 +131,5 @@ mod private {
     impl Sealed for u32 {}
     impl Sealed for f32 {}
     impl Sealed for f64 {}
+    impl Sealed for u64 {}
 }
