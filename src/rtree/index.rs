@@ -160,8 +160,7 @@ pub struct RTreeRef<'a, N: IndexableNum> {
 }
 
 impl<'a, N: IndexableNum> RTreeRef<'a, N> {
-    pub fn try_new<T: AsRef<[u8]>>(data: &'a T) -> Result<Self> {
-        let data = data.as_ref();
+    pub fn try_new(data: &'a [u8]) -> Result<Self> {
         let metadata = TreeMetadata::try_new(data)?;
         let boxes = metadata.boxes_slice(data);
         let indices = metadata.indices_slice(data);

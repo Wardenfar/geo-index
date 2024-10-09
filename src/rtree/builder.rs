@@ -10,7 +10,7 @@ use crate::rtree::util::compute_num_nodes;
 /// A builder to create an [`OwnedRTree`].
 pub struct RTreeBuilder<N: IndexableNum> {
     /// data buffer
-    pub data: Vec<u8>,
+    data: Vec<u8>,
     num_items: usize,
     node_size: usize,
     num_nodes: usize,
