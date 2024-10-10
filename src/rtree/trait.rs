@@ -97,6 +97,54 @@ pub trait RTreeIndex<N: IndexableNum>: Sized {
         results
     }
 
+    /// Search an RTree given the provided bounding box.
+    ///
+    /// Results are the indexes of the inserted objects in insertion order.
+    fn search_with_node(&self, min_x: N, min_y: N, max_x: N, max_y: N) -> Vec<(usize, Node<N, Self>)> {
+        let boxes = self.boxes();
+        let indices = self.indices();
+
+        let mut outer_node_index = Some(boxes.len() - 4);
+
+        let mut queue = vec![];
+        let mut results = vec![];
+
+        while let Some(node_index) = outer_node_index {
+            // find the end index of the node
+            let end = (node_index + self.node_size() * 4)
+                .min(upper_bound(node_index, self.level_bounds()));
+
+            // search through child nodes
+            for pos in (node_index..end).step_by(4) {
+                // check if node bbox intersects with query bbox
+                if max_x < boxes[pos] {
+                    continue; // maxX < nodeMinX
+                }
+                if max_y < boxes[pos + 1] {
+                    continue; // maxY < nodeMinY
+                }
+                if min_x > boxes[pos + 2] {
+                    continue; // minX > nodeMaxX
+                }
+                if min_y > boxes[pos + 3] {
+                    continue; // minY > nodeMaxY
+                }
+
+                let index = indices.get(pos >> 2);
+
+                if node_index >= self.num_items() * 4 {
+                    queue.push(index); // node; add it to the search queue
+                } else {
+                    results.push((index, Node::new(self, pos))); // leaf item
+                }
+            }
+
+            outer_node_index = queue.pop();
+        }
+
+        results
+    }
+
     // #[allow(unused_mut, unused_labels, unused_variables)]
     // fn neighbors(&self, x: N, y: N, max_distance: Option<N>) -> Vec<usize> {
     //     let boxes = self.boxes();
