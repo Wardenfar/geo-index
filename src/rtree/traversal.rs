@@ -14,7 +14,7 @@ pub struct Node<'a, N: IndexableNum, T: RTreeIndex<N>> {
 }
 
 impl<'a, N: IndexableNum, T: RTreeIndex<N>> Node<'a, N, T> {
-    pub(crate) fn new(tree: &'a T, index: usize) -> Self {
+    pub fn new(tree: &'a T, index: usize) -> Self {
         Self {
             tree,
             index,
@@ -22,7 +22,7 @@ impl<'a, N: IndexableNum, T: RTreeIndex<N>> Node<'a, N, T> {
         }
     }
 
-    pub(crate) fn from_root(tree: &'a T) -> Self {
+    pub fn from_root(tree: &'a T) -> Self {
         let root_index = tree.boxes().len() - 4;
         Self {
             tree,
