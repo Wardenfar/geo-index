@@ -9,7 +9,7 @@ use std::marker::PhantomData;
 #[derive(Clone)]
 pub struct Node<'a, N: IndexableNum, T: RTreeIndex<N>> {
     tree: &'a T,
-    index: usize,
+    pub index: usize,
     phantom: PhantomData<N>,
 }
 
